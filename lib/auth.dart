@@ -21,4 +21,14 @@ class Auth {
     await _auth.signOut();
   }
 
+  Future<void> registerWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
+    await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  } //TODO obsługa wszystkich kodów błędów
+
 }

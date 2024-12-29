@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:user_app/Pages/register_page.dart';
 import 'package:user_app/auth.dart';
 
 class LoginPage extends StatefulWidget {
@@ -14,7 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -61,6 +62,8 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(color: Colors.blue),
                 ),
               ),
+              SizedBox(height: 10),
+              _registerButton(context),
             ],
           ),
         ),
@@ -86,6 +89,23 @@ class _LoginPageState extends State<LoginPage> {
             );
   }
 
+  Widget _registerButton(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => RegisterPage()), // Nawigacja
+        );
+      },
+      child: Text(
+        'Don’t have an account? Register',
+        style: TextStyle(color: Colors.blue),
+      ),
+    );
+  }
+
+  
+
   Future<void> login(String email, String password) async {
     try {
       await Auth().signInWithEmailAndPassword(email: email, password: password);
@@ -97,6 +117,8 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
   }
+
+
 }
 
 
