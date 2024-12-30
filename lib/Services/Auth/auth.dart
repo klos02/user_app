@@ -5,6 +5,8 @@ class Auth {
 
   User? get currentUser => _auth.currentUser;
 
+ 
+
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
   Future<void> signInWithEmailAndPassword({
@@ -29,9 +31,16 @@ class Auth {
       email: email,
       password: password,
     );
+
+    await sendConfirmationEmail();
+    
   } //TODO obsługa wszystkich kodów błędów
 
   Future<void> sendPasswordResetEmail({required String email}) async {
     await _auth.sendPasswordResetEmail(email: email);
+  }
+
+  Future<void> sendConfirmationEmail() async {
+    await currentUser!.sendEmailVerification();
   }
 }

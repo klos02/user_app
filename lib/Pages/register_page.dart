@@ -1,8 +1,5 @@
-import 'package:animate_text/animate_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:random_text_reveal/random_text_reveal.dart';
 import 'package:user_app/Services/Auth/auth.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -111,6 +108,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Registration successful!')),
       );
+      //Navigator.of(context).pop();
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
