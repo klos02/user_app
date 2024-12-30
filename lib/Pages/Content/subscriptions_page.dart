@@ -32,11 +32,36 @@ class SubscriptionsPage extends StatelessWidget {
             itemBuilder: (context, index) {
               final trainer = trainers[index];
               final trainerName = trainer['name'] ?? 'Unknown';
+              final rating = trainer['rating'] as double? ?? 0.0;
+              final nrOfRatings = trainer['nrOfRatings'] as int? ?? 0;
 
               return ListTile(
                 leading: Icon(Icons.person),
-                title: Text(trainerName, style: TextStyle(fontSize: 18)),
-                subtitle: Text('Trainer'),
+                title: Text(
+                  trainerName,
+                  style: TextStyle(fontSize: 18),
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        ...List.generate(5, (i) {
+                          if (i < rating.round()) {
+                            return Icon(Icons.star, color: Colors.amber, size: 18);
+                          } else {
+                            return Icon(Icons.star_border, color: Colors.grey, size: 18);
+                          }
+                        }),
+                        SizedBox(width: 8),
+                        Text(
+                          '$rating (${nrOfRatings} reviews)',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               );
             },
           );

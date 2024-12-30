@@ -5,8 +5,7 @@ class TrainersService {
 
   Stream<List<Map<String, dynamic>>> getTrainers() {
     return _firestore
-        .collection('users') 
-        .where('role', isEqualTo: 'trainer') 
+        .collection('trainers') 
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => doc.data())

@@ -34,7 +34,7 @@ class Auth {
       password: password,
     );
 
-    UserModel newUser = UserModel(email: email, role: 'user', uid: currentUser!.uid);
+    UserModel newUser = UserModel(email: email, uid: currentUser!.uid);
     Usersdb().addUser(newUser.toJson());
     //await sendConfirmationEmail();
     
