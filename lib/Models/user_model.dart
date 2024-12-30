@@ -7,15 +7,15 @@ class UserModel {
   UserModel(
       {this.name, required this.email, required this.role, required this.uid});
 
-  UserModel.fromJson(Map<String, dynamic> json) {
+  UserModel.fromJson(Map<String, dynamic> json)
+      : email = json['email'] ?? '',
+        role = json['role'] ?? 'user',
+        uid = json['uid'] ?? '' {
     name = json['name'];
-    email = json['email'] ?? '';
-    role = json['role'] ?? 'user';
-    uid = json['uid'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['name'] = name;
     data['email'] = email;
     data['role'] = role;

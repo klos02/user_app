@@ -108,7 +108,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Registration successful!')),
       );
-      //Navigator.of(context).pop();
+      Navigator.of(context).pop();
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:user_app/Models/user_model.dart';
+import 'package:user_app/Services/Auth/users_db.dart';
 
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -32,7 +34,9 @@ class Auth {
       password: password,
     );
 
-    await sendConfirmationEmail();
+    UserModel newUser = UserModel(email: email, role: 'user', uid: currentUser!.uid);
+    Usersdb().addUser(newUser.toJson());
+    //await sendConfirmationEmail();
     
   } //TODO obsługa wszystkich kodów błędów
 
