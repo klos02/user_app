@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:user_app/Pages/Content/account_settings_page.dart';
 import 'package:user_app/Pages/Content/settings_page.dart';
 import 'package:user_app/Pages/Content/subscriptions_page.dart';
 import 'package:user_app/Pages/Content/workout_page.dart';
-import 'package:user_app/auth.dart';
+import 'package:user_app/Services/Auth/auth.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,9 +26,19 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Logged in as ${Auth().currentUser!.email}"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.account_circle),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AccountSettingsPage()),
+              );
+            },
+          ),
+        ],
       ),
-      body: _screens[_currentIndex], // Wyświetlany ekran zależy od indeksu
+      body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
@@ -37,12 +48,12 @@ class _HomePageState extends State<HomePage> {
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: Icon(Icons.fitness_center),
+            label: 'Training Plans',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.subscriptions),
-            label: 'Subscriptions',
+            icon: Icon(Icons.people),
+            label: 'Personal Trainers',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),

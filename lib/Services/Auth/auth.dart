@@ -31,4 +31,7 @@ class Auth {
     );
   } //TODO obsługa wszystkich kodów błędów
 
+  Future<void> sendPasswordResetEmail({required String email}) async {
+    await _auth.sendPasswordResetEmail(email: email);
+  }
 }

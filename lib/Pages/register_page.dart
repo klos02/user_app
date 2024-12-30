@@ -1,6 +1,9 @@
+import 'package:animate_text/animate_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:user_app/auth.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:random_text_reveal/random_text_reveal.dart';
+import 'package:user_app/Services/Auth/auth.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -27,6 +30,7 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(height: 30),
             TextField(
               controller: _emailController,
               decoration: InputDecoration(
@@ -44,9 +48,9 @@ class _RegisterPageState extends State<RegisterPage> {
             ElevatedButton(
               onPressed: () {
                 checkPassword();
-                if(_passwordsMatch){
+                if (_passwordsMatch) {
                   _register(_emailController.text, _passwordController.text);
-                } 
+                }
 
                 if (_passwordsMatch) {
                 } else {
