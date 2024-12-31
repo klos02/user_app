@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:user_app/Pages/Content/collaboration_request_page.dart';
 import 'package:user_app/Services/trainers_service.dart';
+
 
 class SubscriptionsPage extends StatelessWidget {
   final TrainersService _trainersService = TrainersService();
@@ -48,9 +50,11 @@ class SubscriptionsPage extends StatelessWidget {
                       children: [
                         ...List.generate(5, (i) {
                           if (i < rating.round()) {
-                            return Icon(Icons.star, color: Colors.amber, size: 18);
+                            return Icon(Icons.star,
+                                color: Colors.amber, size: 18);
                           } else {
-                            return Icon(Icons.star_border, color: Colors.grey, size: 18);
+                            return Icon(Icons.star_border,
+                                color: Colors.grey, size: 18);
                           }
                         }),
                         SizedBox(width: 8),
@@ -61,6 +65,20 @@ class SubscriptionsPage extends StatelessWidget {
                       ],
                     ),
                   ],
+                ),
+                trailing: IconButton(
+                  icon: Icon(Icons.arrow_forward_rounded),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CollaborationRequestPage(
+                          trainerName: trainerName,
+                          trainerId: trainer['uid'],
+                        ),
+                      ),
+                    );
+                  },
                 ),
               );
             },
