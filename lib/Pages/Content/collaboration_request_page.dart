@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CollaborationRequestPage extends StatelessWidget {
+class CollaborationRequestPage extends StatefulWidget {
   final String trainerName;
   final String trainerId;
 
@@ -10,10 +10,21 @@ class CollaborationRequestPage extends StatelessWidget {
   });
 
   @override
+  _CollaborationRequestPageState createState() =>
+      _CollaborationRequestPageState();
+}
+
+class _CollaborationRequestPageState extends State<CollaborationRequestPage> {
+  String? selectedGoal;
+  int? selectedSessionsPerWeek;
+  String? selectedUpdateFrequency;
+  TextEditingController _additionalNotesController = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Request Collaboration with $trainerName'),
+        title: FittedBox(child: Text('Collaborate with ${widget.trainerName}')),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -21,21 +32,82 @@ class CollaborationRequestPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Send a request to collaborate with $trainerName.',
-              style: TextStyle(fontSize: 18),
+              'Choose your goal:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            GridView.count(
+              shrinkWrap: true,
+              crossAxisCount: 3,
+              childAspectRatio: 2,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+              children: [
+                _goalTile('Increase Mass'),
+                _goalTile('Increase Strength'),
+                _goalTile('Lose Weight'),
+              ],
             ),
             SizedBox(height: 16),
+            Text(
+              'Sessions per week:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            DropdownButton<int>(
+              value: selectedSessionsPerWeek,
+              onChanged: (value) {
+                setState(() {
+                  selectedSessionsPerWeek = value;
+                });
+              },
+              hint: Text('Select sessions per week'),
+              items: List.generate(7, (index) {
+                return DropdownMenuItem<int>(
+                  value: index + 1,
+                  child: Text('${index + 1} sessions'),
+                );
+              }),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Update frequency for your plan:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            DropdownButton<String>(
+              value: selectedUpdateFrequency,
+              onChanged: (value) {
+                setState(() {
+                  selectedUpdateFrequency = value;
+                });
+              },
+              hint: Text('Select update frequency'),
+              items: ['Weekly', 'Bi-weekly', 'Monthly']
+                  .map((frequency) => DropdownMenuItem<String>(
+                        value: frequency,
+                        child: Text(frequency),
+                      ))
+                  .toList(),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Additional Notes:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
             TextField(
+              controller: _additionalNotesController,
               decoration: InputDecoration(
-                labelText: 'Message',
+                labelText: 'Any additional notes',
                 border: OutlineInputBorder(),
               ),
-              maxLines: 5,
+              maxLines: 3,
             ),
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                //TODO
+                //TODO: Logika wysyłania prośby o współpracę
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Collaboration request sent!')),
                 );
@@ -43,6 +115,37 @@ class CollaborationRequestPage extends StatelessWidget {
               child: Text('Send Request'),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _goalTile(String goal) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedGoal = goal;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: selectedGoal == goal ? Colors.blue : Colors.grey[200],
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: selectedGoal == goal ? Colors.blue : Colors.grey,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            goal,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: selectedGoal == goal ? Colors.white : Colors.black,
+            ),
+          ),
         ),
       ),
     );
