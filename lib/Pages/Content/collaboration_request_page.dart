@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:user_app/Services/Auth/auth.dart';
+import 'package:user_app/Services/requests_service.dart';
 
 class CollaborationRequestPage extends StatefulWidget {
   final String trainerName;
   final String trainerId;
 
   CollaborationRequestPage({
+    super.key,
     required this.trainerName,
     required this.trainerId,
   });
@@ -19,6 +22,14 @@ class _CollaborationRequestPageState extends State<CollaborationRequestPage> {
   int? selectedSessionsPerWeek;
   String? selectedUpdateFrequency;
   TextEditingController _additionalNotesController = TextEditingController();
+  String userId = Auth().currentUser!.uid;
+  late String trainerId;
+
+  @override
+  void initState() {
+    super.initState();
+    trainerId = widget.trainerId;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +37,7 @@ class _CollaborationRequestPageState extends State<CollaborationRequestPage> {
       appBar: AppBar(
         title: FittedBox(child: Text('Collaborate with ${widget.trainerName}')),
       ),
-      body: Padding(
+      body: SingleChildScrollView( // To make the page scrollable
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,7 +95,7 @@ class _CollaborationRequestPageState extends State<CollaborationRequestPage> {
               },
               hint: Text('Select update frequency'),
               items: ['Weekly', 'Bi-weekly', 'Monthly']
-                  .map((frequency) => DropdownMenuItem<String>(
+                  .map((frequency) => DropdownMenuItem<String>( 
                         value: frequency,
                         child: Text(frequency),
                       ))
@@ -107,10 +118,27 @@ class _CollaborationRequestPageState extends State<CollaborationRequestPage> {
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                //TODO: Logika wysyłania prośby o współpracę
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Collaboration request sent!')),
-                );
+                try {
+                  final request = RequestsService().createRequest(
+                      userId,
+                      trainerId,
+                      selectedGoal!,
+                      selectedSessionsPerWeek!,
+                      selectedUpdateFrequency!,
+                      _additionalNotesController.text);
+
+                  RequestsService().sendRequest(request);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Collaboration request sent!')),
+                  );
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Please fill in all fields'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
               },
               child: Text('Send Request'),
             ),
