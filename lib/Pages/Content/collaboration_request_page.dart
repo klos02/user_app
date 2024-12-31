@@ -131,6 +131,9 @@ class _CollaborationRequestPageState extends State<CollaborationRequestPage> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Collaboration request sent!')),
                   );
+
+                  Navigator.pop(context);
+                  
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
