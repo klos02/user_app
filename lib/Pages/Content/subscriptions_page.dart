@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:user_app/Pages/Content/collaboration_request_page.dart';
 import 'package:user_app/Services/trainers_service.dart';
 
-
 class SubscriptionsPage extends StatelessWidget {
   final TrainersService _trainersService = TrainersService();
 
@@ -34,7 +33,9 @@ class SubscriptionsPage extends StatelessWidget {
             itemBuilder: (context, index) {
               final trainer = trainers[index];
               final trainerName = trainer['name'] ?? 'Unknown';
-              final rating = trainer['rating'] as double? ?? 0.0;
+              final rating = (trainer['rating'] is int)
+                  ? (trainer['rating'] as int).toDouble()
+                  : trainer['rating'] as double? ?? 0.0;
               final nrOfRatings = trainer['nrOfRatings'] as int? ?? 0;
 
               return ListTile(
