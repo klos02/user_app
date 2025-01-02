@@ -70,5 +70,15 @@ class Usersdb {
         return 0;
       }
     }
+
+    Future<String?> getName(String uid) async {
+      try {
+        final snapshot = await _firestore.collection('users').doc(uid).get();
+        return snapshot.data()?['name'] ?? '';
+      } on FirebaseException catch (e) {
+        print(e); // debug
+        return 'Unknown User';
+      }
+    }
   }
 

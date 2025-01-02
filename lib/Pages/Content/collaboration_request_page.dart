@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:user_app/Models/request_model.dart';
 import 'package:user_app/Services/Auth/auth.dart';
+import 'package:user_app/Services/Auth/users_db.dart';
 import 'package:user_app/Services/requests_service.dart';
 
 class CollaborationRequestPage extends StatefulWidget {
@@ -23,12 +25,19 @@ class _CollaborationRequestPageState extends State<CollaborationRequestPage> {
   String? selectedUpdateFrequency;
   TextEditingController _additionalNotesController = TextEditingController();
   String userId = Auth().currentUser!.uid;
+  String? name;
   late String trainerId;
 
   @override
   void initState() {
     super.initState();
     trainerId = widget.trainerId;
+    _loadData();
+  }
+
+   _loadData() async {
+    name = await Usersdb().getName(userId);
+    setState(() {});
   }
 
   @override
@@ -37,7 +46,8 @@ class _CollaborationRequestPageState extends State<CollaborationRequestPage> {
       appBar: AppBar(
         title: FittedBox(child: Text('Collaborate with ${widget.trainerName}')),
       ),
-      body: SingleChildScrollView( // To make the page scrollable
+      body: SingleChildScrollView(
+        
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,7 +105,7 @@ class _CollaborationRequestPageState extends State<CollaborationRequestPage> {
               },
               hint: Text('Select update frequency'),
               items: ['Weekly', 'Bi-weekly', 'Monthly']
-                  .map((frequency) => DropdownMenuItem<String>( 
+                  .map((frequency) => DropdownMenuItem<String>(
                         value: frequency,
                         child: Text(frequency),
                       ))
@@ -119,13 +129,16 @@ class _CollaborationRequestPageState extends State<CollaborationRequestPage> {
             ElevatedButton(
               onPressed: () {
                 try {
-                  final request = RequestsService().createRequest(
-                      userId,
-                      trainerId,
-                      selectedGoal!,
-                      selectedSessionsPerWeek!,
-                      selectedUpdateFrequency!,
-                      _additionalNotesController.text);
+                 
+                  final requestModel = RequestModel(
+                      fromId: userId,
+                      toId: trainerId,
+                      goal: selectedGoal!,
+                      sessionsPerWeek: selectedSessionsPerWeek!,
+                      updateFrequency: selectedUpdateFrequency!,
+                      additionalNotes: _additionalNotesController.text,
+                      fromName: name!);
+                  final request = RequestsService().createRequest(requestModel);
 
                   RequestsService().sendRequest(request);
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -133,7 +146,6 @@ class _CollaborationRequestPageState extends State<CollaborationRequestPage> {
                   );
 
                   Navigator.pop(context);
-                  
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -141,6 +153,7 @@ class _CollaborationRequestPageState extends State<CollaborationRequestPage> {
                       backgroundColor: Colors.red,
                     ),
                   );
+                  print(e);
                 }
               },
               child: Text('Send Request'),

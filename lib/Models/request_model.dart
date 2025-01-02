@@ -6,6 +6,8 @@ class RequestModel {
   String updateFrequency;
   String? additionalNotes;
   String? status;
+  String? requestId;
+  String? fromName;
 
   RequestModel({
     required this.fromId,
@@ -15,6 +17,8 @@ class RequestModel {
     required this.updateFrequency,
     this.additionalNotes,
     this.status,
+    this.requestId,
+    this.fromName,
   });
 
   RequestModel.fromJson(Map<String, dynamic> json)
@@ -24,7 +28,10 @@ class RequestModel {
         sessionsPerWeek = json['sessionsPerWeek'] ?? 0,
         updateFrequency = json['updateFrequency'] ?? '',
         additionalNotes = json['additionalNotes'],
-        status = json['status'];
+        status = json['status'],
+        requestId = json['requestId'],
+        fromName = json['fromName'];
+
 
     Map<String, dynamic> toJson(){
       final Map<String, dynamic> data = <String, dynamic>{};
@@ -35,6 +42,8 @@ class RequestModel {
       data['updateFrequency'] = updateFrequency;
       data['additionalNotes'] = additionalNotes;
       data['status'] = status;
+      data['requestId'] = requestId;
+      data['fromName'] = fromName;
       return data;
     }
 
