@@ -1,9 +1,12 @@
+import 'package:user_app/Models/collaboration_model.dart';
+
 class TrainerModel {
   String? name;
   String email;
   String uid;
   double? rating;
   int? nrOfRatings;
+  List<CollaborationModel>? collaborations;
 
   TrainerModel(
       {this.name, required this.email, required this.uid, this.rating, this.nrOfRatings});
@@ -14,6 +17,10 @@ class TrainerModel {
     name = json['name'];
     rating = json['rating'];
     nrOfRatings = json['nrOfRatings'];
+    collaborations = json['collaborations'] != null
+        ? List<CollaborationModel>.from(
+            json['collaborations'].map((x) => CollaborationModel.fromJson(x)))
+        : [];
   }
 
   Map<String, dynamic> toJson() {
@@ -23,6 +30,7 @@ class TrainerModel {
     data['uid'] = uid;
     data['rating'] = rating;
     data['nrOfRatings'] = nrOfRatings;
+    data['collaborations'] = collaborations?.map((x) => x.toJson()).toList();
     return data;
   }
 }

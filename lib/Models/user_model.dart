@@ -1,3 +1,5 @@
+import 'package:user_app/Models/collaboration_model.dart';
+
 class UserModel {
   String? name;
   String email;
@@ -6,6 +8,7 @@ class UserModel {
   double? weight; // Waga w kilogramach
   double? height; // Wzrost w centymetrach
   int? gymExperience; // Staż na siłowni w miesiącach
+  List<CollaborationModel>? collaborations;
 
   UserModel({
     this.name,
@@ -27,6 +30,10 @@ class UserModel {
             ? int.tryParse(json['gymExperience'].toString())
             : null {
     name = json['name'];
+    collaborations = json['collaborations'] != null
+        ? List<CollaborationModel>.from(
+            json['collaborations'].map((x) => CollaborationModel.fromJson(x)))
+        : [];
   }
 
   Map<String, dynamic> toJson() {
@@ -38,6 +45,7 @@ class UserModel {
     data['weight'] = weight;
     data['height'] = height;
     data['gymExperience'] = gymExperience;
+    data['collaborations'] = collaborations?.map((x) => x.toJson()).toList();
     return data;
   }
 }
