@@ -1,10 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:user_app/Models/training_plan_model.dart';
+import 'package:user_app/Services/Auth/auth.dart';
+import 'package:user_app/Services/training_result_service.dart';
 
 class WorkoutDetailPage extends StatefulWidget {
   final TrainingPlanModel trainingPlan;
+  final currentUser = Auth().currentUser!.uid;
 
-  const WorkoutDetailPage({required this.trainingPlan, super.key});
+   WorkoutDetailPage({required this.trainingPlan, super.key});
 
   @override
   _WorkoutDetailPageState createState() => _WorkoutDetailPageState();
@@ -107,34 +111,43 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
     );
   }
 
-  void _submitResults() async {
-    final resultsToSend = _results.entries.expand((entry) {
-      final exerciseKey = entry.key;
-      final trainingDay = exerciseKey.split('-')[0];
-      final exercise = exerciseKey.split('-')[1];
+ void _submitResults() async {
+  final resultsToSend = _results.entries.expand((entry) {
+    final exerciseKey = entry.key;
+    final trainingDay = exerciseKey.split('-')[0];
+    final exercise = exerciseKey.split('-')[1];
 
-      return entry.value.entries.map((setEntry) {
-        final setIndex = setEntry.key;
-        final setData = setEntry.value;
+    return entry.value.entries.map((setEntry) {
+      final setIndex = setEntry.key;
+      final setData = setEntry.value;
 
-        return {
-          'trainingDay': trainingDay,
-          'exercise': exercise,
-          'set': setIndex + 1,
-          'weight': setData['weight'] ?? '',
-          'reps': setData['reps'] ?? '',
-          'timestamp': DateTime.now().toIso8601String(),
-        };
-      });
-    }).toList();
+      return {
+        'trainingDay': trainingDay,
+        'exercise': exercise,
+        'set': setIndex + 1,
+        'weight': setData['weight'] ?? '',
+        'reps': setData['reps'] ?? '',
+        'timestamp': Timestamp.now(),
+      };
+    });
+  }).toList();
 
-    
-    // await TrainingResultService().saveResults(clientId, widget.trainingPlan.id, resultsToSend);
+  try {
+    await TrainingResultService().saveResultsToAllExercises(
+      userId: widget.currentUser,
+      trainingPlanId: widget.trainingPlan.id!,
+      results: resultsToSend,
+    );
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Results submitted successfully!')),
     );
 
     Navigator.pop(context);
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to submit results: $e')),
+    );
   }
+}
 }
