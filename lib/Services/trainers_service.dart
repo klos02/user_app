@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:user_app/Models/trainer_model.dart';
 
 class TrainersService {
   final _firestore = FirebaseFirestore.instance;
@@ -11,4 +12,15 @@ class TrainersService {
             .map((doc) => doc.data())
             .toList());
   }
+Future<Map<String, dynamic>> getTrainerById(String trainerId) async {
+    final doc = await _firestore.collection('trainers').doc(trainerId).get();
+    final data = doc.data();
+
+
+    if (data == null) {
+    throw Exception('Trainer not found');
+  }
+    return data;
+  }
+  
 }

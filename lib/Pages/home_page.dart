@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:user_app/Pages/Content/account_settings_page.dart';
 import 'package:user_app/Pages/Content/settings_page.dart';
 import 'package:user_app/Pages/Content/subscriptions_page.dart';
+import 'package:user_app/Pages/Content/training_plans_page.dart';
 import 'package:user_app/Pages/Content/workout_page.dart';
 import 'package:user_app/Services/Auth/auth.dart';
 
@@ -18,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   // Lista ekranów
   final List<Widget> _screens = [
     WorkoutPage(),
+    TrainingPlansPage(),
     SubscriptionsPage(),
     SettingsPage(),
   ];
@@ -40,6 +42,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
@@ -47,6 +50,11 @@ class _HomePageState extends State<HomePage> {
           });
         },
         items: const [
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.fitness_center_sharp),
+            label: 'Workout',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.fitness_center),
             label: 'Training Plans',

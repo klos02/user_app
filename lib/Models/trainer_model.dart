@@ -6,7 +6,7 @@ class TrainerModel {
   String uid;
   double? rating;
   int? nrOfRatings;
-  List<CollaborationModel>? collaborations;
+  List<String>? collaborations;
 
   TrainerModel(
       {this.name, required this.email, required this.uid, this.rating, this.nrOfRatings});
@@ -18,9 +18,9 @@ class TrainerModel {
     rating = json['rating'];
     nrOfRatings = json['nrOfRatings'];
     collaborations = json['collaborations'] != null
-        ? List<CollaborationModel>.from(
-            json['collaborations'].map((x) => CollaborationModel.fromJson(x)))
+        ? List<String>.from(json['collaborations'].map((x) => x))
         : [];
+
   }
 
   Map<String, dynamic> toJson() {
@@ -30,7 +30,7 @@ class TrainerModel {
     data['uid'] = uid;
     data['rating'] = rating;
     data['nrOfRatings'] = nrOfRatings;
-    data['collaborations'] = collaborations?.map((x) => x.toJson()).toList();
+    data['collaborations'] = collaborations;
     return data;
   }
 }
