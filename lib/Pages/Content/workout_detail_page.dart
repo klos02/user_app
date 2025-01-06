@@ -36,14 +36,14 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
               title: Text(trainingDay.name),
               subtitle: Text('Exercises: ${trainingDay.exercises.length}'),
               children: trainingDay.exercises.map((exercise) {
-                final exerciseKey = '${trainingDay.name}-${exercise.name}';
+                final exerciseKey = '${trainingDay.name}-${exercise.baseModel.name}';
 
                 return ListTile(
-                  title: Text(exercise.name),
+                  title: Text(exercise.baseModel.name),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Description: ${exercise.description}'),
+                      Text('Description: ${exercise.baseModel.description}'),
                       const SizedBox(height: 8),
                       ListView.builder(
                         shrinkWrap: true,

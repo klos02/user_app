@@ -62,20 +62,20 @@ class TrainingPlanDetailsPage extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        exercise.name,
+                                        exercise.baseModel.name,
                                         style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       const SizedBox(height: 8),
                                       Text(
-                                          'Description: ${exercise.description ?? 'No description'}'),
+                                          'Description: ${exercise.baseModel.description ?? 'No description'}'),
                                       const SizedBox(height: 8),
                                       Text('Sets: ${exercise.sets}'),
                                       Text('Reps: ${exercise.reps}'),
                                       Text('Rest: ${exercise.rest} sec'),
                                       Text(
-                                          'Muscle Group: ${exercise.muscleGroup}'),
+                                          'Muscle Group: ${exercise.baseModel.muscleGroup}'),
                                     ],
                                   ),
                                 ),
