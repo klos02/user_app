@@ -48,7 +48,7 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                       ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: exercise.sets, // Liczba serii
+                        itemCount: exercise.sets,
                         itemBuilder: (context, setIndex) {
                           final setKey = '${exerciseKey}-set${setIndex + 1}';
 
@@ -121,12 +121,14 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
       final setIndex = setEntry.key;
       final setData = setEntry.value;
 
+      
+
       return {
         'trainingDay': trainingDay,
         'exercise': exercise,
         'set': setIndex + 1,
-        'weight': setData['weight'] ?? '',
-        'reps': setData['reps'] ?? '',
+        'weight': int.tryParse(setData['weight']!) ?? 0,
+        'reps': int.tryParse(setData['reps']!) ?? 0,
         'timestamp': Timestamp.now(),
       };
     });
@@ -144,7 +146,7 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
     );
 
     Navigator.pop(context);
-  } catch (e) {
+  } on FirebaseException catch (e)  {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Failed to submit results: $e')),
     );

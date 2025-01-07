@@ -50,17 +50,25 @@ class TrainingResultService {
         throw Exception('Training plan does not exist');
       } else {
         final List<dynamic> trainingDays = planSnapshot.get('trainingDays');
+        
         if (trainingDays.isNotEmpty) {
           for (var day in trainingDays) {
             final List<dynamic> exercises = day['exercises'];
 
+            
+
             for (var exercise in exercises) {
               if (exercise != null) {
                 exercise['results'] ??= [];
+                //print('Results for this exercise: $exercise');
+
+                //print('Results for this exercise: ${results[0]['exercise']}');
 
                 final exerciseResults = results.where((result) {
-                  return result['exercise'] == exercise['name'];
+                  return result['exercise'] == exercise['baseModel']['name'];
                 }).toList();
+
+                //print('Results for this exercise: $exerciseResults');
 
                 for (var result in exerciseResults) {
                   final existingResult = exercise['results']?.firstWhere(
@@ -95,6 +103,23 @@ class TrainingResultService {
       }
     } catch (e) {
       throw Exception('Failed to save results to all exercises: $e');
+    }
+  }
+
+  Future<List<dynamic>> getResults(String trainingPlanId) async {
+    try {
+      final DocumentSnapshot trainingPlanSnapshot =
+          await _firestore.collection('trainingPlans').doc(trainingPlanId).get();
+
+      if (!trainingPlanSnapshot.exists) {
+        throw Exception('Training plan does not exist');
+      }
+
+      final trainingDays = trainingPlanSnapshot.get('trainingDays') as List<dynamic>? ?? [];
+      trainingDays.sort((a, b) => a['dayNumber'].compareTo(b['dayNumber']));
+      return trainingDays;
+    } catch (e) {
+      throw Exception('Failed to fetch results: $e');
     }
   }
 }

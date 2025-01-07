@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:user_app/Models/training_plan_model.dart';
 import 'package:user_app/Models/collaboration_model.dart';
 import 'package:user_app/Pages/Content/workout_detail_page.dart';
+import 'package:user_app/Pages/Content/workout_results_page.dart';
 import 'package:user_app/Services/collaboration_service.dart';
-import 'package:user_app/Services/training_result_service.dart';
 import 'package:user_app/Services/Auth/auth.dart';
 
 class WorkoutPage extends StatelessWidget {
@@ -56,14 +56,35 @@ class WorkoutPage extends StatelessWidget {
                 child: ListTile(
                   title: Text(plan.name ?? 'Unnamed Plan'),
                   subtitle: Text(plan.description ?? 'No description'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => WorkoutDetailPage(trainingPlan: plan),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  WorkoutResultsPage(trainingPlan: plan),
+                            ),
+                          );
+                        },
+                        child: Text('Results'),
                       ),
-                    );
-                  },
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  WorkoutDetailPage(trainingPlan: plan),
+                            ),
+                          );
+                        },
+                        child: Text('Edit'),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
@@ -73,4 +94,3 @@ class WorkoutPage extends StatelessWidget {
     );
   }
 }
-

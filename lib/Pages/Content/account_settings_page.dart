@@ -78,54 +78,58 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  width: 100,
-                  child: TextField(
-                    controller: _weightController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Weight',
-                      border: OutlineInputBorder(),
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: TextField(
+                      controller: _weightController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Weight',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          weight = double.tryParse(value) ?? weight;
+                        });
+                      },
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        weight = double.tryParse(value) ?? weight;
-                      });
-                    },
                   ),
                 ),
-                SizedBox(width: 16),
-                Container(
-                  width: 100,
-                  child: TextField(
-                    controller: _heightController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Height',
-                      border: OutlineInputBorder(),
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: TextField(
+                      controller: _heightController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Height',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          height = double.tryParse(value) ?? height;
+                        });
+                      },
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        height = double.tryParse(value) ?? height;
-                      });
-                    },
                   ),
                 ),
-                SizedBox(width: 16),
-                Container(
-                  width: 100,
-                  child: TextField(
-                    controller: _gymExperienceController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Experience',
-                      border: OutlineInputBorder(),
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: TextField(
+                      controller: _gymExperienceController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Experience',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          gymExperience = int.tryParse(value) ?? gymExperience;
+                        });
+                      },
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        gymExperience = int.tryParse(value) ?? gymExperience;
-                      });
-                    },
                   ),
                 ),
               ],
