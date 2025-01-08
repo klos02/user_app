@@ -104,7 +104,7 @@ class TrainingPlansPage extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => TrainingPlanDetailsPage(
-                                      trainingPlan: plan),
+                                      trainingPlan: plan, ),
                                 ),
                               );
                             },

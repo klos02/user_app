@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:user_app/Models/training_plan_model.dart';
 import 'package:user_app/Services/Auth/auth.dart';
+import 'package:user_app/Services/collaboration_service.dart';
 import 'package:user_app/Services/training_result_service.dart';
 
 class WorkoutDetailPage extends StatefulWidget {
@@ -139,6 +140,8 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
         trainingPlanId: widget.trainingPlan.id!,
         results: resultsToSend,
       );
+
+      
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Results submitted successfully!')),

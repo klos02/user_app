@@ -48,7 +48,7 @@ class CollaborationService {
   Future<void> addTrainingPlanToCollaboration(
       String collaborationId, TrainingPlanModel trainingPlan) async {
     try {
-      // Dodajemy cały obiekt planu treningowego do listy 'trainingPlans'
+      
       await _firestore.collection('collaborations').doc(collaborationId).update({
         'trainingPlans': FieldValue.arrayUnion([trainingPlan.toJson()]),
       });
