@@ -8,7 +8,7 @@ class WorkoutDetailPage extends StatefulWidget {
   final TrainingPlanModel trainingPlan;
   final currentUser = Auth().currentUser!.uid;
 
-   WorkoutDetailPage({required this.trainingPlan, super.key});
+  WorkoutDetailPage({required this.trainingPlan, super.key});
 
   @override
   _WorkoutDetailPageState createState() => _WorkoutDetailPageState();
@@ -36,7 +36,8 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
               title: Text(trainingDay.name),
               subtitle: Text('Exercises: ${trainingDay.exercises.length}'),
               children: trainingDay.exercises.map((exercise) {
-                final exerciseKey = '${trainingDay.name}-${exercise.baseModel.name}';
+                final exerciseKey =
+                    '${trainingDay.name}-${exercise.baseModel.name}';
 
                 return ListTile(
                   title: Text(exercise.baseModel.name),
@@ -68,8 +69,8 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                                       setState(() {
                                         _results[exerciseKey] ??= {};
                                         _results[exerciseKey]![setIndex] ??= {};
-                                        _results[exerciseKey]![setIndex]!['weight'] =
-                                            value;
+                                        _results[exerciseKey]![setIndex]![
+                                            'weight'] = value;
                                       });
                                     },
                                   ),
@@ -85,8 +86,8 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                                       setState(() {
                                         _results[exerciseKey] ??= {};
                                         _results[exerciseKey]![setIndex] ??= {};
-                                        _results[exerciseKey]![setIndex]!['reps'] =
-                                            value;
+                                        _results[exerciseKey]![setIndex]![
+                                            'reps'] = value;
                                       });
                                     },
                                   ),
@@ -111,45 +112,43 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
     );
   }
 
- void _submitResults() async {
-  final resultsToSend = _results.entries.expand((entry) {
-    final exerciseKey = entry.key;
-    final trainingDay = exerciseKey.split('-')[0];
-    final exercise = exerciseKey.split('-')[1];
+  void _submitResults() async {
+    final resultsToSend = _results.entries.expand((entry) {
+      final exerciseKey = entry.key;
+      final exercise = exerciseKey.split('-').last;
 
-    return entry.value.entries.map((setEntry) {
-      final setIndex = setEntry.key;
-      final setData = setEntry.value;
+      return entry.value.entries.map((setEntry) {
+        final setIndex = setEntry.key;
+        final setData = setEntry.value;
 
-      
+        return {
+          'exercise': exercise,
+          'set': setIndex + 1,
+          'weight': int.tryParse(setData['weight']!) ?? 0,
+          'reps': int.tryParse(setData['reps']!) ?? 0,
+          'timestamp': Timestamp.now(),
+        };
+      });
+    }).toList();
 
-      return {
-        'trainingDay': trainingDay,
-        'exercise': exercise,
-        'set': setIndex + 1,
-        'weight': int.tryParse(setData['weight']!) ?? 0,
-        'reps': int.tryParse(setData['reps']!) ?? 0,
-        'timestamp': Timestamp.now(),
-      };
-    });
-  }).toList();
+    //print('Results for this exercise: $resultsToSend');
 
-  try {
-    await TrainingResultService().saveResultsToAllExercises(
-      userId: widget.currentUser,
-      trainingPlanId: widget.trainingPlan.id!,
-      results: resultsToSend,
-    );
+    try {
+      await TrainingResultService().saveResultsToAllExercises(
+        userId: widget.currentUser,
+        trainingPlanId: widget.trainingPlan.id!,
+        results: resultsToSend,
+      );
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Results submitted successfully!')),
-    );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Results submitted successfully!')),
+      );
 
-    Navigator.pop(context);
-  } on FirebaseException catch (e)  {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Failed to submit results: $e')),
-    );
+      Navigator.pop(context);
+    } on FirebaseException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to submit results: $e')),
+      );
+    }
   }
-}
 }

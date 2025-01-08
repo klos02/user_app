@@ -50,11 +50,11 @@ class _WorkoutResultsPageState extends State<WorkoutResultsPage> {
               final day = trainingDays[dayIndex];
               return ExpansionTile(
                 title: Text(day['name'] ?? 'Unnamed Day'),
-                subtitle: Text('Day ${day['dayNumber']}'),
                 children: (day['exercises'] as List<dynamic>).map((exercise) {
                   final results = exercise['results'] as List<dynamic>? ?? [];
                   return ListTile(
-                    title: Text(exercise['baseModel']['name'] ?? 'Unnamed Exercise'),
+                    title: Text(
+                        exercise['baseModel']['name'] ?? 'Unnamed Exercise'),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: results.map((result) {
