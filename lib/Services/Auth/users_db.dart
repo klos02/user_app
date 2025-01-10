@@ -71,7 +71,7 @@ class Usersdb {
       }
     }
 
-    Future<String?> getName(String uid) async {
+    Future<String> getName(String uid) async {
       try {
         final snapshot = await _firestore.collection('users').doc(uid).get();
         return snapshot.data()?['name'] ?? '';

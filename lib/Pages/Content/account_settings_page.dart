@@ -43,7 +43,20 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Account Settings'),
+        title: FutureBuilder<String>(
+          future: Usersdb().getName(userId),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Text('My account');
+            } else if (snapshot.hasError) {
+              return Text('Error');
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Text('My account');
+            } else {
+              return Text(snapshot.data!);
+            }
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
