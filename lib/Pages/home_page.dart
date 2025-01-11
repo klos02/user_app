@@ -14,11 +14,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0; // Indeks aktualnie wybranego ekranu
+  int _currentIndex = 0;
 
-  // Lista ekranów
   final List<Widget> _screens = [
-    WorkoutPage(),
     TrainingPlansPage(),
     SubscriptionsPage(),
     SettingsPage(),
@@ -43,6 +41,7 @@ class _HomePageState extends State<HomePage> {
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
@@ -50,11 +49,6 @@ class _HomePageState extends State<HomePage> {
           });
         },
         items: const [
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.fitness_center_sharp),
-            label: 'Workout',
-          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.fitness_center),
             label: 'Training Plans',

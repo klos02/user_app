@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:user_app/Models/training_plan_model.dart';
 import 'package:user_app/Services/training_result_service.dart';
@@ -44,6 +45,11 @@ class _WorkoutResultsPageState extends State<WorkoutResultsPage> {
           }
 
           final trainingDays = snapshot.data!;
+          trainingDays.sort((a, b){
+            final aDate = (a['date'] as Timestamp).toDate();
+            final bDate = (b['date'] as Timestamp).toDate();
+            return aDate.compareTo(bDate);  
+          });
           return ListView.builder(
             itemCount: trainingDays.length,
             itemBuilder: (context, dayIndex) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:user_app/Models/training_plan_model.dart';
-import 'package:user_app/Models/exercise_model.dart'; 
+import 'package:user_app/Models/exercise_model.dart';
 
 class TrainingPlanDetailsPage extends StatelessWidget {
   final TrainingPlanModel trainingPlan;
@@ -9,6 +9,10 @@ class TrainingPlanDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    final sortedTrainingDays = [...trainingPlan.trainingDays];
+    sortedTrainingDays.sort((a, b) => a.date.compareTo(b.date));
+
     return Scaffold(
       appBar: AppBar(title: Text(trainingPlan.name ?? 'Training Plan Details')),
       body: Padding(
@@ -21,16 +25,15 @@ class TrainingPlanDetailsPage extends StatelessWidget {
               style: TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 16),
-            Text('Start Date: ${trainingPlan.startDate.toLocal().toString().split(' ')[0]}'),
-
+            Text(
+                'Start Date: ${trainingPlan.startDate.toLocal().toString().split(' ')[0]}'),
             const SizedBox(height: 8),
-            
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: trainingPlan.trainingDays.length,
+                itemCount: sortedTrainingDays.length,
                 itemBuilder: (context, index) {
-                  final trainingDay = trainingPlan.trainingDays[index];
+                  final trainingDay = sortedTrainingDays[index];
                   return Card(
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     child: Padding(
@@ -45,7 +48,6 @@ class TrainingPlanDetailsPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           Text('Exercises (${trainingDay.exercises.length}):'),
-                          
                           ListView.builder(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),

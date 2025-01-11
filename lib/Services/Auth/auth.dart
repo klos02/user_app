@@ -28,13 +28,14 @@ class Auth {
   Future<void> registerWithEmailAndPassword({
     required String email,
     required String password,
+    required String name,
   }) async {
     await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
 
-    UserModel newUser = UserModel(email: email, uid: currentUser!.uid);
+    UserModel newUser = UserModel(email: email, uid: currentUser!.uid, name: name);
     Usersdb().addUser(newUser.toJson());
     //await sendConfirmationEmail();
     

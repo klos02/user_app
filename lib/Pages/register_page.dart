@@ -8,10 +8,9 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
-
   final _passwordController = TextEditingController();
-
   final _repeatPasswordController = TextEditingController();
 
   bool _passwordsMatch = true;
@@ -28,6 +27,16 @@ class _RegisterPageState extends State<RegisterPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(height: 30),
+            TextField(
+              controller: _nameController,
+              decoration: InputDecoration(
+                labelText: 'Name',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
             TextField(
               controller: _emailController,
               decoration: InputDecoration(
@@ -46,10 +55,11 @@ class _RegisterPageState extends State<RegisterPage> {
               onPressed: () {
                 checkPassword();
                 if (_passwordsMatch) {
-                  _register(_emailController.text, _passwordController.text);
-                }
-
-                if (_passwordsMatch) {
+                  _register(
+                    _nameController.text,
+                    _emailController.text,
+                    _passwordController.text,
+                  );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -101,10 +111,12 @@ class _RegisterPageState extends State<RegisterPage> {
     });
   }
 
-  Future<void> _register(String email, String password) async {
+  Future<void> _register(String name, String email, String password) async {
     try {
-      await Auth()
-          .registerWithEmailAndPassword(email: email, password: password);
+      
+      await Auth().registerWithEmailAndPassword(email: email, password: password, name: name);
+
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Registration successful!')),
       );

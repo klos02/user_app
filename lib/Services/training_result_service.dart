@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:user_app/Services/collaboration_service.dart';
 
 class TrainingResultService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -51,8 +52,6 @@ class TrainingResultService {
       } else {
         final List<dynamic> trainingDays = planSnapshot.get('trainingDays');
 
-        //print('Results for this exercise: $results');
-
         if (trainingDays.isNotEmpty) {
           for (var day in trainingDays) {
             final List<dynamic> exercises = day['exercises'];
@@ -61,27 +60,32 @@ class TrainingResultService {
               if (exercise != null) {
                 exercise['results'] ??= [];
 
-                //print('Results for this exercise: ${results[0]['exercise']}');
-
                 final exerciseResults = results.where((result) {
-                  return result['exercise'] == exercise['baseModel']['name'];
+                  final dateName = result['dateName'];
+
+                  return result['exercise'] == exercise['baseModel']['name'] && exercise['dateName'] == dateName;
                 }).toList();
 
                 for (var result in exerciseResults) {
-                  final existingResult = exercise['results']?.firstWhere(
-                    (r) => r['set'] == result['set'],
-                    orElse: () => null,
-                  );
+                  final existingResultIndex = exercise['results']
+                      .indexWhere((r) => r['set'] == result['set']);
 
-                  if (existingResult != null) {
-                    existingResult['weight'] = result['weight'];
-                    existingResult['reps'] = result['reps'];
+                  if (existingResultIndex != -1) {
+                    final existingResult =
+                        exercise['results'][existingResultIndex];
+                    if (result.containsKey('weight')) {
+                      existingResult['weight'] = result['weight'];
+                    }
+                    if (result.containsKey('reps')) {
+                      existingResult['reps'] = result['reps'];
+                    }
                     existingResult['timestamp'] = result['timestamp'];
                   } else {
                     exercise['results'].add({
                       'set': result['set'],
-                      'weight': result['weight'],
-                      'reps': result['reps'],
+                      if (result.containsKey('weight'))
+                        'weight': result['weight'],
+                      if (result.containsKey('reps')) 'reps': result['reps'],
                       'timestamp': result['timestamp'],
                     });
                   }
@@ -94,6 +98,8 @@ class TrainingResultService {
             'trainingDays': trainingDays,
             'updatedAt': Timestamp.now(),
           });
+
+          await CollaborationService().addTrainingPlanToCollaborationFromFirebase(trainingPlanId);
         } else {
           throw Exception('No training days found in the training plan');
         }
@@ -116,10 +122,12 @@ class TrainingResultService {
 
       final trainingDays =
           trainingPlanSnapshot.get('trainingDays') as List<dynamic>? ?? [];
-      trainingDays.sort((a, b) => a['dayNumber'].compareTo(b['dayNumber']));
+      //trainingDays.sort((a, b) => a['dayNumber'].compareTo(b['dayNumber']));
       return trainingDays;
     } catch (e) {
       throw Exception('Failed to fetch results: $e');
     }
   }
+
+  
 }

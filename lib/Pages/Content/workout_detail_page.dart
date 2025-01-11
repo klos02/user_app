@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:user_app/Models/training_plan_model.dart';
 import 'package:user_app/Services/Auth/auth.dart';
-import 'package:user_app/Services/collaboration_service.dart';
 import 'package:user_app/Services/training_result_service.dart';
 
 class WorkoutDetailPage extends StatefulWidget {
@@ -21,6 +20,9 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
   @override
   Widget build(BuildContext context) {
     final trainingDays = widget.trainingPlan.trainingDays;
+    trainingDays.sort((a, b) => a.date.compareTo(b.date));
+
+    final today = DateTime.now();
 
     return Scaffold(
       appBar: AppBar(
@@ -30,11 +32,27 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
         itemCount: trainingDays.length,
         itemBuilder: (context, index) {
           final trainingDay = trainingDays[index];
+          final isToday = _isSameDate(today, trainingDay.date);
 
           return Card(
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: ExpansionTile(
-              title: Text(trainingDay.name),
+              title: Row(
+                children: [
+                  Text(
+                    trainingDay.name,
+                    style: TextStyle(
+                      fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
+                      color: isToday ? Colors.blue : null,
+                    ),
+                  ),
+                  if (isToday)
+                    const Padding(
+                      padding: EdgeInsets.only(left: 8.0),
+                      child: Icon(Icons.today, color: Colors.blue),
+                    ),
+                ],
+              ),
               subtitle: Text('Exercises: ${trainingDay.exercises.length}'),
               children: trainingDay.exercises.map((exercise) {
                 final exerciseKey =
@@ -49,7 +67,7 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                       const SizedBox(height: 8),
                       ListView.builder(
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: exercise.sets,
                         itemBuilder: (context, setIndex) {
                           final setKey = '${exerciseKey}-set${setIndex + 1}';
@@ -62,7 +80,7 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: TextField(
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       labelText: 'Weight (kg)',
                                     ),
                                     keyboardType: TextInputType.number,
@@ -79,7 +97,7 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: TextField(
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       labelText: 'Reps',
                                     ),
                                     keyboardType: TextInputType.number,
@@ -108,31 +126,57 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _submitResults,
-        child: Icon(Icons.send),
+        child: const Icon(Icons.send),
       ),
     );
+  }
+
+  bool _isSameDate(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
 
   void _submitResults() async {
     final resultsToSend = _results.entries.expand((entry) {
       final exerciseKey = entry.key;
-      final exercise = exerciseKey.split('-').last;
+      final parts = exerciseKey.split('-');
+      final trainingDayDate = parts.take(3).join('-'); // YYYY-MM-DD
+      final exercise = parts.skip(3).join('-');
+
+      final dateName = trainingDayDate;
 
       return entry.value.entries.map((setEntry) {
         final setIndex = setEntry.key;
         final setData = setEntry.value;
 
-        return {
+        final Map<String, dynamic> result = {
           'exercise': exercise,
           'set': setIndex + 1,
-          'weight': int.tryParse(setData['weight']!) ?? 0,
-          'reps': int.tryParse(setData['reps']!) ?? 0,
           'timestamp': Timestamp.now(),
+          'dateName': dateName,
         };
-      });
+
+        if (setData['weight'] != null && setData['weight']!.isNotEmpty) {
+          result['weight'] = int.tryParse(setData['weight']!) ?? 0;
+        }
+
+        if (setData['reps'] != null && setData['reps']!.isNotEmpty) {
+          result['reps'] = int.tryParse(setData['reps']!) ?? 0;
+        }
+
+        return result;
+      }).where((result) =>
+          result.containsKey('weight') || result.containsKey('reps'));
     }).toList();
 
-    //print('Results for this exercise: $resultsToSend');
+    if (resultsToSend.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('No results to submit. Please fill in the data.')),
+      );
+      return;
+    }
 
     try {
       await TrainingResultService().saveResultsToAllExercises(
@@ -141,10 +185,8 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
         results: resultsToSend,
       );
 
-      
-
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Results submitted successfully!')),
+        const SnackBar(content: Text('Results submitted successfully!')),
       );
 
       Navigator.pop(context);

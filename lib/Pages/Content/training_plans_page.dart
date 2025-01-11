@@ -1,122 +1,216 @@
 import 'package:flutter/material.dart';
-import 'package:user_app/Models/trainer_model.dart';
-import 'package:user_app/Models/training_plan_model.dart';
 import 'package:user_app/Models/collaboration_model.dart';
+import 'package:user_app/Models/training_plan_model.dart';
+import 'package:user_app/Pages/Content/RateTrainer/rating_dialog.dart';
 import 'package:user_app/Services/collaboration_service.dart';
 import 'package:user_app/Services/trainers_service.dart';
-import 'package:user_app/Services/training_plan_service.dart';
+import 'package:user_app/Pages/Content/workout_detail_page.dart';
+import 'package:user_app/Pages/Content/workout_results_page.dart';
 import 'package:user_app/Pages/Content/training_plan_details_page.dart';
 import 'package:user_app/Services/Auth/auth.dart';
 
-class TrainingPlansPage extends StatelessWidget {
-  final String clientId = Auth().currentUser!.uid;
-  //late TrainerModel trainer;
+class TrainingPlansPage extends StatefulWidget {
+  @override
+  _TrainingPlansPageState createState() => _TrainingPlansPageState();
+}
 
-  TrainingPlansPage({super.key});
+class _TrainingPlansPageState extends State<TrainingPlansPage> {
+  final String clientId = Auth().currentUser!.uid;
 
   Future<String> getTrainerName(String trainerId) async {
     final trainer = await TrainersService().getTrainerById(trainerId);
-    final name = await trainer['name'];
-    return name;
+    return trainer['name'] ?? 'Unknown Trainer';
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Your Training Plans'),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          bottom: TabBar(
+            tabs: [
+              Tab(icon: Icon(Icons.person), text: 'Your Collaborations'),
+              Tab(icon: Icon(Icons.fitness_center), text: 'Training Plans'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            _buildStreamView(
+              stream: CollaborationService().getCollaborationsForId(clientId),
+              emptyMessage: 'No collaborations available',
+              builder: (collaborations) => ListView(
+                padding: EdgeInsets.all(16),
+                children:
+                    collaborations.map((c) => _buildTrainerCard(c)).toList(),
+              ),
+            ),
+            _buildStreamView(
+              stream: CollaborationService().getCollaborationsForId(clientId),
+              emptyMessage: 'No training plans available',
+              builder: (collaborations) {
+                final trainingPlans = collaborations
+                    .expand((c) => c.trainingPlans ?? [])
+                    .toList();
+                return ListView(
+                  padding: EdgeInsets.all(16),
+                  children:
+                      trainingPlans.map((p) => _buildPlanCard(p)).toList(),
+                );
+              },
+            ),
+          ],
+        ),
       ),
-      body: StreamBuilder<List<CollaborationModel>>(
-        stream: CollaborationService().getCollaborationsForId(clientId),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
+    );
+  }
 
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(
-              child: Text(
-                'No collaborations found.',
-                style: TextStyle(fontSize: 18),
-              ),
-            );
-          }
+  Widget _buildStreamView<T>({
+    required Stream<List<T>> stream,
+    required String emptyMessage,
+    required Widget Function(List<T>) builder,
+  }) {
+    return StreamBuilder<List<T>>(
+      stream: stream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(child: Text(emptyMessage));
+        }
+        return builder(snapshot.data!);
+      },
+    );
+  }
 
-          final collaborations = snapshot.data!;
-
-          if (collaborations.isEmpty) {
-            return Center(
-              child: Text(
-                'No available training plans.',
-                style: TextStyle(fontSize: 18),
-              ),
-            );
-          }
-
-          return ListView.builder(
-            itemCount: collaborations.length,
-            itemBuilder: (context, index) {
-              final collaboration = collaborations[index];
-              final trainingPlans = collaboration.trainingPlans ?? [];
-
-              return Card(
-                margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: ExpansionTile(
-                  title: FutureBuilder<String>(
-                    future: getTrainerName(collaboration.toId),
-                    builder: (context, trainerSnapshot) {
-                      if (trainerSnapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        return Text('Loading trainer...');
-                      } else if (trainerSnapshot.hasError) {
-                        return Text('Error: ${trainerSnapshot.error}');
-                      } else if (!trainerSnapshot.hasData) {
-                        return Text('Unknown Trainer');
-                      } else {
-                        return Text(
-                          "Creator: ${trainerSnapshot.data!}",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        );
-                      }
-                    },
-                  ),
-                  subtitle: Text('Goal: ${collaboration.goal}'),
-                  children: [
-                    if (trainingPlans.isEmpty)
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text('No training plans available.'),
-                      )
-                    else
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: trainingPlans.length,
-                        itemBuilder: (context, planIndex) {
-                          final plan = trainingPlans[planIndex];
-                          return ListTile(
-                            title: Text(plan.name ?? 'Unnamed Plan'),
-                            subtitle:
-                                Text(plan.description ?? 'No description'),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TrainingPlanDetailsPage(
-                                      trainingPlan: plan, ),
-                                ),
-                              );
-                            },
-                          );
-                        },
+  Widget _buildTrainerCard(CollaborationModel collaboration) {
+    return Card(
+      margin: EdgeInsets.only(bottom: 16),
+      child: ExpansionTile(
+        title: FutureBuilder<String>(
+          future: getTrainerName(collaboration.toId),
+          builder: (context, snapshot) {
+            return Text(snapshot.data ?? '',
+                style: TextStyle(fontWeight: FontWeight.bold));
+          },
+        ),
+        subtitle: Text('Goal: ${collaboration.goal}'),
+        trailing: ElevatedButton.icon(
+          onPressed: () => _showRatingDialog(collaboration.toId),
+          label: Text('Rate', style: TextStyle(fontSize: 12)),
+          icon: Icon(Icons.star, size: 16),
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            minimumSize: Size(80, 30),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            textStyle: TextStyle(fontSize: 12),
+          ),
+        ),
+        children: (collaboration.trainingPlans ?? [])
+            .map((plan) => ListTile(
+                  title: Text(plan.name ?? 'Unnamed Plan'),
+                  subtitle: Text(plan.description ?? 'No description'),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.info_outline),
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                TrainingPlanDetailsPage(trainingPlan: plan),
+                          ),
+                        ),
                       ),
+                    ],
+                  ),
+                ))
+            .toList(),
+      ),
+    );
+  }
+
+  void _showRatingDialog(String trainerId) async {
+    final trainerName = await getTrainerName(trainerId);
+    if (mounted) {
+      showDialog(
+        context: context,
+        builder: (context) => RatingDialog(
+          trainerId: trainerId,
+          trainerName: trainerName,
+        ),
+      );
+    }
+  }
+
+  Widget _buildPlanCard(TrainingPlanModel plan) {
+    return Card(
+      margin: EdgeInsets.only(bottom: 16),
+      child: Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  plan.name ?? 'Unnamed Plan',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  plan.description ?? 'No description',
+                  style: TextStyle(color: Colors.grey),
+                ),
+                SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => WorkoutDetailPage(trainingPlan: plan),
+                        ),
+                      ),
+                      icon: Icon(Icons.play_arrow),
+                      label: Text('Start Workout'),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              WorkoutResultsPage(trainingPlan: plan),
+                        ),
+                      ),
+                      icon: Icon(Icons.assessment_outlined),
+                      label: Text('Results'),
+                    ),
                   ],
                 ),
-              );
-            },
-          );
-        },
+              ],
+            ),
+          ),
+          Positioned(
+            top: 8,
+            right: 8,
+            child: IconButton(
+              icon: Icon(Icons.info_outline, color: Colors.blue),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => TrainingPlanDetailsPage(trainingPlan: plan),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

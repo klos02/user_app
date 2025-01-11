@@ -20,6 +20,17 @@ class TrainingPlanService {
     }
   }
 
+  Future<String> getCollaborationId(String planId) async {
+    try {
+      final snapshot = await _firestore.collection('trainingPlans').doc(planId).get();
+      return snapshot.data()?['collaborationId'];
+    } catch (e) {
+      print('Error getting collaboration id: $e');
+      throw Exception('Failed to get collaboration id');
+    }
+    
+  }
+
   int calculateTimeTillUpdate(CollaborationModel collab, DateTime startDate) {
     final lastUpdateDate = collab.lastUpdate ?? startDate;
     String updateFrequency = collab.updateFrequency;
