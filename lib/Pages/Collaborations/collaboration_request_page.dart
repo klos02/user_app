@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:user_app/Models/request_model.dart';
+import 'package:user_app/Models/TrainerClients/request_model.dart';
 import 'package:user_app/Services/Auth/auth.dart';
 import 'package:user_app/Services/Auth/users_db.dart';
-import 'package:user_app/Services/requests_service.dart';
+import 'package:user_app/Services/Collaborations/requests_service.dart';
 
 class CollaborationRequestPage extends StatefulWidget {
   final String trainerName;

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:user_app/Models/collaboration_model.dart';
-import 'package:user_app/Models/training_plan_model.dart';
-import 'package:user_app/Pages/Content/RateTrainer/rating_dialog.dart';
-import 'package:user_app/Services/collaboration_service.dart';
-import 'package:user_app/Services/trainers_service.dart';
-import 'package:user_app/Pages/Content/workout_detail_page.dart';
-import 'package:user_app/Pages/Content/workout_results_page.dart';
-import 'package:user_app/Pages/Content/training_plan_details_page.dart';
+import 'package:user_app/Models/TrainerClients/collaboration_model.dart';
+import 'package:user_app/Models/TrainingPlan/training_plan_model.dart';
+import 'package:user_app/Pages/Collaborations/rating_dialog.dart';
+import 'package:user_app/Services/Collaborations/collaboration_service.dart';
+import 'package:user_app/Services/Collaborations/trainers_service.dart';
+import 'package:user_app/Pages/Workout/workout_detail_page.dart';
+import 'package:user_app/Pages/Workout/workout_results_page.dart';
+import 'package:user_app/Pages/TrainingPlan/training_plan_details_page.dart';
 import 'package:user_app/Services/Auth/auth.dart';
 
 class TrainingPlansPage extends StatefulWidget {

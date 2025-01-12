@@ -1,6 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:user_app/Models/training_day_model.dart';
+import 'package:user_app/Models/TrainingPlan/training_day_model.dart';
 
 class TrainingPlanModel {
   String name;

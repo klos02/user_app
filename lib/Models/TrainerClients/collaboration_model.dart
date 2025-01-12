@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:user_app/Models/request_model.dart';
-import 'package:user_app/Models/training_plan_model.dart';
-import 'package:user_app/Models/request_model.dart';
+import 'package:user_app/Models/TrainerClients/request_model.dart';
+import 'package:user_app/Models/TrainingPlan/training_plan_model.dart';
+import 'package:user_app/Models/TrainerClients/request_model.dart';
 
 class CollaborationModel extends RequestModel {
   final DateTime startDate;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:user_app/Models/training_plan_model.dart';
-import 'package:user_app/Models/exercise_model.dart';
+import 'package:user_app/Models/TrainingPlan/training_plan_model.dart';
+import 'package:user_app/Models/TrainingPlan/exercise_model.dart';
 
 class TrainingPlanDetailsPage extends StatelessWidget {
   final TrainingPlanModel trainingPlan;

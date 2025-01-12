@@ -1,4 +1,4 @@
-import 'package:user_app/Models/collaboration_model.dart';
+import 'package:user_app/Models/TrainerClients/collaboration_model.dart';
 
 class TrainerModel {
   String? name;

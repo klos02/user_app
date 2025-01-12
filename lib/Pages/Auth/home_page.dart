@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:user_app/Pages/Content/account_settings_page.dart';
-import 'package:user_app/Pages/Content/settings_page.dart';
-import 'package:user_app/Pages/Content/subscriptions_page.dart';
-import 'package:user_app/Pages/Content/training_plans_page.dart';
+import 'package:user_app/Pages/AppSettings/account_settings_page.dart';
+import 'package:user_app/Pages/AppSettings/settings_page.dart';
+import 'package:user_app/Pages/Collaborations/subscriptions_page.dart';
+import 'package:user_app/Pages/TrainingPlan/training_plans_page.dart';
 import 'package:user_app/Services/Auth/auth.dart';
 
 class HomePage extends StatefulWidget {

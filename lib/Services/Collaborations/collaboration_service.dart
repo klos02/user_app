@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:user_app/Models/collaboration_model.dart';
-import 'package:user_app/Models/training_plan_model.dart';
+import 'package:user_app/Models/TrainerClients/collaboration_model.dart';
+import 'package:user_app/Models/TrainingPlan/training_plan_model.dart';
 
 class CollaborationService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

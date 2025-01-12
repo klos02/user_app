@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:user_app/Models/user_model.dart';
+import 'package:user_app/Models/Users/user_model.dart';
 import 'package:user_app/Services/Auth/users_db.dart';
 
 class Auth {

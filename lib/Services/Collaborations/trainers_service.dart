@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:user_app/Models/trainer_model.dart';
+import 'package:user_app/Models/Users/trainer_model.dart';
 
 class TrainersService {
   final _firestore = FirebaseFirestore.instance;

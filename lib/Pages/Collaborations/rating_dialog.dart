@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:user_app/Services/Auth/auth.dart';
-import 'package:user_app/Services/trainers_service.dart';
+import 'package:user_app/Services/Collaborations/trainers_service.dart';
 
 class RatingDialog extends StatefulWidget {
   final String trainerId;

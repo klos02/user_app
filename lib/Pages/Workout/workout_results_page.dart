@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:user_app/Models/training_plan_model.dart';
-import 'package:user_app/Services/training_result_service.dart';
+import 'package:user_app/Models/TrainingPlan/training_plan_model.dart';
+import 'package:user_app/Services/TrainingPlan/training_result_service.dart';
 
 class WorkoutResultsPage extends StatefulWidget {
   final TrainingPlanModel trainingPlan;

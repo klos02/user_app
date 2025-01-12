@@ -1,5 +1,5 @@
-import 'package:user_app/Models/exercise_base_model.dart';
-import 'package:user_app/Models/result_model.dart';
+import 'package:user_app/Models/TrainingPlan/exercise_base_model.dart';
+import 'package:user_app/Models/TrainingPlan/result_model.dart';
 
 class ExerciseModel {
    int sets;

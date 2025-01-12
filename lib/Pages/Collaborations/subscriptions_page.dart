@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:user_app/Pages/Content/collaboration_request_page.dart';
-import 'package:user_app/Services/trainers_service.dart';
+import 'package:user_app/Pages/Collaborations/collaboration_request_page.dart';
+import 'package:user_app/Services/Collaborations/trainers_service.dart';
 
 class SubscriptionsPage extends StatefulWidget {
   @override
