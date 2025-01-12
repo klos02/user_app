@@ -3,7 +3,6 @@ import 'package:user_app/Pages/Content/account_settings_page.dart';
 import 'package:user_app/Pages/Content/settings_page.dart';
 import 'package:user_app/Pages/Content/subscriptions_page.dart';
 import 'package:user_app/Pages/Content/training_plans_page.dart';
-import 'package:user_app/Pages/Content/workout_page.dart';
 import 'package:user_app/Services/Auth/auth.dart';
 
 class HomePage extends StatefulWidget {

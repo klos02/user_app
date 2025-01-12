@@ -126,7 +126,10 @@ class _CollaborationRequestPageState extends State<CollaborationRequestPage> {
               child: Center(
                 child: Text(
                   'Send Request',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
                 ),
               ),
             ),
@@ -147,10 +150,16 @@ class _CollaborationRequestPageState extends State<CollaborationRequestPage> {
         duration: Duration(milliseconds: 200),
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: selectedGoal == goal ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.secondary,
+          color: selectedGoal == goal
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).colorScheme.secondary,
           borderRadius: BorderRadius.circular(12),
           boxShadow: selectedGoal == goal
-              ? [BoxShadow(color: Theme.of(context).colorScheme.primary, blurRadius: 10)]
+              ? [
+                  BoxShadow(
+                      color: Theme.of(context).colorScheme.primary,
+                      blurRadius: 10)
+                ]
               : [],
         ),
         child: Column(
@@ -159,7 +168,9 @@ class _CollaborationRequestPageState extends State<CollaborationRequestPage> {
             Icon(
               icon,
               size: 32,
-              color: selectedGoal == goal ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.onSecondary,
+              color: selectedGoal == goal
+                  ? Theme.of(context).colorScheme.onPrimary
+                  : Theme.of(context).colorScheme.onSecondary,
             ),
             SizedBox(height: 8),
             Text(
@@ -168,7 +179,9 @@ class _CollaborationRequestPageState extends State<CollaborationRequestPage> {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
-                color: selectedGoal == goal ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.onSecondary,
+                color: selectedGoal == goal
+                    ? Theme.of(context).colorScheme.onPrimary
+                    : Theme.of(context).colorScheme.onSecondary,
               ),
             ),
           ],
@@ -214,7 +227,7 @@ class _CollaborationRequestPageState extends State<CollaborationRequestPage> {
     );
   }
 
-  void _sendRequest() {
+  void _sendRequest() async {
     if (selectedGoal == null ||
         selectedSessionsPerWeek == null ||
         selectedUpdateFrequency == null) {
@@ -222,6 +235,26 @@ class _CollaborationRequestPageState extends State<CollaborationRequestPage> {
         SnackBar(
           content: Text('Please fill in all fields'),
           backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (await RequestsService().hasUserSentRequest(userId, widget.trainerId)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('You have already sent a request to this trainer'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+      return;
+    }
+
+    if (await RequestsService().userHasActiveCollaboration(userId, widget.trainerId)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('You are already collaborating with this trainer'),
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
       return;

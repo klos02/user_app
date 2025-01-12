@@ -26,7 +26,11 @@ class _WorkoutResultsPageState extends State<WorkoutResultsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Results: ${widget.trainingPlan.name ?? 'Unnamed Plan'}'),
+        title: Text(
+          'Results: ${widget.trainingPlan.name ?? 'Unnamed Plan'}',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
       ),
       body: FutureBuilder<List<dynamic>>(
         future: _resultsFuture,
@@ -39,37 +43,93 @@ class _WorkoutResultsPageState extends State<WorkoutResultsPage> {
             return Center(
               child: Text(
                 'No results found for this training plan.',
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 18, color: Colors.grey[600]),
               ),
             );
           }
 
           final trainingDays = snapshot.data!;
-          trainingDays.sort((a, b){
+          trainingDays.sort((a, b) {
             final aDate = (a['date'] as Timestamp).toDate();
             final bDate = (b['date'] as Timestamp).toDate();
-            return aDate.compareTo(bDate);  
+            return aDate.compareTo(bDate);
           });
+
           return ListView.builder(
+            padding: EdgeInsets.all(16.0),
             itemCount: trainingDays.length,
             itemBuilder: (context, dayIndex) {
               final day = trainingDays[dayIndex];
-              return ExpansionTile(
-                title: Text(day['name'] ?? 'Unnamed Day'),
-                children: (day['exercises'] as List<dynamic>).map((exercise) {
-                  final results = exercise['results'] as List<dynamic>? ?? [];
-                  return ListTile(
-                    title: Text(
-                        exercise['baseModel']['name'] ?? 'Unnamed Exercise'),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: results.map((result) {
-                        return Text(
-                            'Set ${result['set']}: ${result['reps']} reps @ ${result['weight']}kg (Rest: ${exercise['rest']}s)');
-                      }).toList(),
+              return Card(
+                margin: EdgeInsets.symmetric(vertical: 8.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 4,
+                child: ExpansionTile(
+                  expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                  title: Text(
+                    day['name'] ?? 'Unnamed Day',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
-                  );
-                }).toList(),
+                  ),
+                  children: (day['exercises'] as List<dynamic>).map((exercise) {
+                    final results = exercise['results'] as List<dynamic>? ?? [];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            exercise['baseModel']['name'] ?? 'Unnamed Exercise',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                          SizedBox(height: 12.0),
+                          // Loop through each set result and display it
+                          Column(
+                            children: results.map<Widget>((result) {
+                              return Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  // Set number (bolded)
+                                  Text(
+                                    'Set ${result['set']}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  // Reps and Weight
+                                  Text(
+                                    '${result['reps']} reps @ ${result['weight']} kg',
+                                    style: TextStyle(
+                                        fontSize: 14, color: Colors.grey[700]),
+                                  ),
+                                  // Rest Time
+                                  Text(
+                                    'Rest: ${exercise['rest']}s',
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.grey),
+                                  ),
+                                ],
+                              );
+                            }).toList(),
+                          ),
+                          SizedBox(height: 12.0),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
               );
             },
           );
