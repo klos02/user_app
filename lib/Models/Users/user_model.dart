@@ -5,9 +5,9 @@ class UserModel {
   String email;
   String uid;
   List<String>? givenRatingTo;
-  double? weight; // Waga w kilogramach
-  double? height; // Wzrost w centymetrach
-  int? gymExperience; // Staż na siłowni w miesiącach
+  double? weight;
+  double? height; 
+  int? gymExperience; 
   List<CollaborationModel>? collaborations;
 
   UserModel({

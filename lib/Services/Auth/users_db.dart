@@ -7,7 +7,7 @@ class Usersdb {
     try {
       await _firestore.collection('users').doc(data['uid']).set(data);
     } on FirebaseException catch (e) {
-      print(e); //debug
+      print(e); 
     }
   }
 
@@ -16,7 +16,7 @@ class Usersdb {
     try {
       await _firestore.collection('users').doc(uid).update({'weight': weight});
     } on FirebaseException catch (e) {
-      print(e); //debug
+      print(e);
     }
   }
 
@@ -25,7 +25,7 @@ class Usersdb {
     try {
       await _firestore.collection('users').doc(uid).update({'height': height});
     } on FirebaseException catch (e) {
-      print(e); //debug
+      print(e);
     }
   }
 
@@ -37,7 +37,7 @@ class Usersdb {
           .doc(uid)
           .update({'gymExperience': experience});
     } on FirebaseException catch (e) {
-      print(e); //debug
+      print(e); 
     }
   }
 
@@ -46,7 +46,7 @@ class Usersdb {
         final snapshot = await _firestore.collection('users').doc(uid).get();
         return snapshot.data()?['weight']?.toDouble() ?? 0;
       } on FirebaseException catch (e) {
-        print(e); // debug
+        print(e); 
         return 0;
       }
     }
@@ -56,7 +56,7 @@ class Usersdb {
         final snapshot = await _firestore.collection('users').doc(uid).get();
         return snapshot.data()?['height']?.toDouble() ?? 0;
       } on FirebaseException catch (e) {
-        print(e); // debug
+        print(e); 
         return 0;
       }
     }
@@ -66,7 +66,7 @@ class Usersdb {
         final snapshot = await _firestore.collection('users').doc(uid).get();
         return snapshot.data()?['gymExperience']?.toInt() ?? 0;
       } on FirebaseException catch (e) {
-        print(e); // debug
+        print(e); 
         return 0;
       }
     }
@@ -76,7 +76,7 @@ class Usersdb {
         final snapshot = await _firestore.collection('users').doc(uid).get();
         return snapshot.data()?['name'] ?? '';
       } on FirebaseException catch (e) {
-        print(e); // debug
+        print(e); 
         return 'Unknown User';
       }
     }

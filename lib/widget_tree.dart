@@ -3,12 +3,7 @@ import 'package:user_app/Pages/Auth/home_page.dart';
 import 'package:user_app/Pages/Auth/login_page.dart';
 import 'package:user_app/Services/Auth/auth.dart';
 
-
 class WidgetTree extends StatefulWidget {
-  
-
-  
-
   @override
   State<WidgetTree> createState() => _WidgetTreeState();
 }

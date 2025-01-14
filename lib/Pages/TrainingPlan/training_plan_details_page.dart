@@ -50,7 +50,6 @@ class TrainingPlanDetailsPage extends StatelessWidget {
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       children: [
-                        // List of exercises for each day
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Column(
@@ -62,7 +61,6 @@ class TrainingPlanDetailsPage extends StatelessWidget {
                                     fontSize: 16, fontWeight: FontWeight.w600),
                               ),
                               const SizedBox(height: 8),
-                              // Exercise list
                               ListView.builder(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
@@ -83,7 +81,6 @@ class TrainingPlanDetailsPage extends StatelessWidget {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          // Exercise Name
                                           Text(
                                             exercise.baseModel.name,
                                             style: TextStyle(
@@ -91,7 +88,6 @@ class TrainingPlanDetailsPage extends StatelessWidget {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           const SizedBox(height: 8),
-                                          // Exercise Details
                                           Text(
                                               'Description: ${exercise.baseModel.description ?? 'No description'}'),
                                           const SizedBox(height: 8),

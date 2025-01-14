@@ -93,14 +93,12 @@ class _WorkoutResultsPageState extends State<WorkoutResultsPage> {
                             ),
                           ),
                           SizedBox(height: 12.0),
-                          // Loop through each set result and display it
                           Column(
                             children: results.map<Widget>((result) {
                               return Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  // Set number (bolded)
                                   Text(
                                     'Set ${result['set']}',
                                     style: TextStyle(
@@ -108,13 +106,11 @@ class _WorkoutResultsPageState extends State<WorkoutResultsPage> {
                                       fontSize: 14,
                                     ),
                                   ),
-                                  // Reps and Weight
                                   Text(
                                     '${result['reps']} reps @ ${result['weight']} kg',
                                     style: TextStyle(
                                         fontSize: 14, color: Colors.grey[700]),
                                   ),
-                                  // Rest Time
                                   Text(
                                     'Rest: ${exercise['rest']}s',
                                     style: TextStyle(

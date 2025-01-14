@@ -33,17 +33,6 @@ class CollaborationService {
     }
   }
 
-  // Future<void> addTrainingPlanToCollaboration(
-  //     String collaborationId, String trainingPlanId) async {
-  //   try {
-  //     await _firestore.collection('collaborations').doc(collaborationId).update({
-  //       'trainingPlans': FieldValue.arrayUnion([trainingPlanId])
-  //     });
-  //   } on FirebaseException catch (e) {
-  //     print(e);
-  //   }
-  // }
-
   Future<void> addTrainingPlanToCollaboration(
       String collaborationId, TrainingPlanModel trainingPlan) async {
     try {

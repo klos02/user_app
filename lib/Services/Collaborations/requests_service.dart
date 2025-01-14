@@ -27,7 +27,7 @@ class RequestsService {
 
       await docRef.set(data);
     } on FirebaseException catch (e) {
-      print(e); //debug
+      print(e); 
     }
   }
 
